@@ -64,7 +64,18 @@ body {
     overflow: hidden; 
     height: 100vh;
     width: 100vw;
-    transition: background-color 0.4s ease, color 0.4s ease; 
+    transition: background-color 0.4s ease, color 0.4s ease;
+    /* account for notch/safe area on modern phones */
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.page-view {
+    display: none; 
+    height: 100dvh; /* FIX UNTUK MOBILE: Menyesuaikan dengan tinggi asli viewport HP */
+    width: 100%;
+    overflow-y: auto; 
+    overflow-x: hidden;
+    padding-bottom: 140px; 
 }
 
 .page-view {
@@ -256,7 +267,10 @@ body.dark-mode .profile-photo { border-color: var(--bg-surface); }
     background-color: #1e293b; padding: 12px 24px; border-radius: 50px;
     display: flex; gap: 20px; align-items: center; z-index: 9999;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 1px solid rgba(255,255,255,0.05); 
+    border: 1px solid rgba(255,255,255,0.05);
+    /* push nav above iOS safe area */
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    bottom: calc(30px + env(safe-area-inset-bottom));
 }
 body.dark-mode .dynamic-island-nav { background-color: #0f172a; border-color: var(--border-color); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); }
 .dynamic-island-nav:hover { padding: 15px 35px; gap: 30px; background-color: #0f172a; }
@@ -286,19 +300,20 @@ body.dark-mode .dynamic-island-nav:hover { background-color: #1e293b; }
    (Sudah diperbarui dengan perbaikan Mobile 100dvh)
    ========================================= */
 @media (max-width: 768px) {
-    .section { padding: 40px 5% 0px; }
+    /* add bottom padding so sections don't get hidden behind the floating navbar */
+    .section { padding: 40px 5% 120px; }
     
     .page-view {
-        padding-bottom: 180px; /* Ruang ekstra lega untuk HP */
+        padding-bottom: calc(220px + env(safe-area-inset-bottom)); /* ruang ekstra lebih besar agar konten tidak tertutup */
     }
     
     #home.page-view.active {
-        align-items: flex-start; /* Mencegah foto/teks terpotong di atas saat layar HP kecil */
+        align-items: flex-start; /* mencegah foto/teks terpotong di atas saat layar HP kecil */
         padding-top: 50px; 
     }
     
     .hero-wrapper {
-        flex-direction: column; /* Memaksa tumpukan vertikal di HP */
+        flex-direction: column; /* memaksa tumpukan vertikal di HP */
         text-align: center;
         gap: 25px; 
     }
@@ -312,7 +327,7 @@ body.dark-mode .dynamic-island-nav:hover { background-color: #1e293b; }
     }
 
     .profile-photo {
-        width: 160px; /* Mengecilkan foto di HP */
+        width: 160px; /* mengecilkan foto di HP */
         height: 160px;
     }
     
@@ -320,16 +335,28 @@ body.dark-mode .dynamic-island-nav:hover { background-color: #1e293b; }
         font-size: 2.3rem; 
     }
 
+    /* make home description easier to read */
+    .hero-text-column p {
+        font-size: 1rem;
+        line-height: 1.6;
+        max-width: 90%;
+        margin: 0 auto 1.5rem;
+    }
+
     .hero-text-column h2.typing-container {
         font-size: 1.1rem;
-        min-height: 50px; /* Mencegah tombol melompat saat ganti baris */
+        min-height: 50px; /* mencegah tombol melompat saat ganti baris */
     }
     
     .about-grid {
         grid-template-columns: 1fr;
     }
+
+    /* ensure about text and skills cards have space at bottom */
+    .about-text { margin-bottom: 2rem; }
+    .skills-grid { margin-bottom: 2.5rem; }
     
-    /* Menyesuaikan Dynamic Island agar pas di layar kecil */
+    /* menyesuaikan Dynamic Island agar pas di layar kecil */
     .dynamic-island-nav {
         bottom: 20px;
         padding: 10px 15px;
